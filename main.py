@@ -33,6 +33,13 @@ async def on_message(message):
     await func.theGrace(message)
   
   if text.startswith('!chnick'):
-    await func.chnick(message)
+    await func.chnick(message, message.mentions[0], text.split()[2])
+
+  if text.startswith('!DavoceneCreed') or text.startswith('!theDavoceneCreed'):
+    await func.theDavoceneCreed(message) 
+  
+
+  if text.startswith('!Genesis') or text.startswith('!genesis'):
+    await func.genesis(message)
 
 client.run(TOKEN)
