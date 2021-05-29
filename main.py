@@ -1,6 +1,7 @@
 import os
 import discord
 import func
+from replit import db
 
 client = discord.Client()
 TOKEN = os.environ['TOKEN']
@@ -21,7 +22,7 @@ async def on_message(message):
     await func.kill(message)
 
   if text.startswith('!battle'):
-    await func.battle(message)
+    await func.battlestart(message)
 
   if text.startswith('!yes'):
     await func.yes(message)
@@ -29,15 +30,23 @@ async def on_message(message):
   if text.startswith('!endbattle'):
     await func.endbattle(message)
 
-  if text.startswith('!theGrace'):
+  if text.startswith('!'):
+    text=list(text)[1:]
+    text=''.join(text)
+    if text.isnumeric() == True:
+      await func.setx(text, message)
+
+  if text.startswith('!theGrace') or text.startswith('!grace'):
     await func.theGrace(message)
   
   if text.startswith('!chnick'):
-    await func.chnick(message, message.mentions[0], text.split()[2])
+    text=text.split()
+    text=text[2:]
+    text=' '.join(text)
+    await func.chnick(message, message.mentions[0], text)
 
-  if text.startswith('!DavoceneCreed') or text.startswith('!theDavoceneCreed'):
+  if text.startswith('!DavoceneCreed') or text.startswith('!theDavoceneCreed') or text.startswith('!creed'):
     await func.theDavoceneCreed(message) 
-  
 
   if text.startswith('!Genesis') or text.startswith('!genesis'):
     await func.genesis(message)
