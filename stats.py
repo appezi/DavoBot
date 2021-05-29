@@ -5,8 +5,8 @@ original={
 }
 
 class player:
-  def __init__(self, name, )
-  strength = 10
-  speed = 10
-  hp = 10
-  def attack(self, target)
+  def __init__(self, name):
+    self.name=name
+
+  def attack(self, target):
+    

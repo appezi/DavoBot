@@ -1,13 +1,31 @@
 import discord
-import stats
 from replit import db
+import os
+import giphy_client
+from giphy_client.rest import ApiException
+import random
 
 participants=[]
 players =[]
 battleon=False
 partcount=False
 x=10
+giphy_token = os.environ['giphykey']
+
+api_instance = giphy_client.DefaultApi()
 #<editor-fold desc="Description">
+async def search_gifs(query):
+    try:
+        response = api_instance.gifs_search_get(giphy_token, 
+            query, limit=50)
+        lst = list(response.data)
+        gif = random.choices(lst)
+
+        return gif[0].url
+
+    except ApiException as e:
+        return "Exception when calling DefaultApi->gifs_search_get: %s\n" % e
+
 def hi(message):
   msg=message.channel.send('Hello {0.author.mention}!'.format(message))
   return msg
