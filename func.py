@@ -1,7 +1,9 @@
 import discord
+import stats
 from replit import db
 
 participants=[]
+players =[]
 battleon=False
 partcount=False
 x=10
@@ -76,6 +78,8 @@ async def initialise():
       db[str(participant)+' Hp']='10'
     await participant.send(f"These are your stats:\nStrength: {db[str(participant)+' Strength']}\nSpeed: {db[str(participant)+' Speed']}\nHp: {db[str(participant)+ ' Hp']}")
 
+    #vars()[participant.nick] = 
+
 async def yes(message):
   global battleon
   global x
@@ -102,4 +106,3 @@ def endbattle(message):
     return message.channel.send("There's no battle on y'a flop!")
 
   #</editor-fold>
-
