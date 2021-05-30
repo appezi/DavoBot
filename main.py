@@ -16,6 +16,7 @@ async def on_message(message):
 
   text=message.content
 
+  # if message.author = ''
   if text.startswith('!hi'):
     await func.hi(message)
 
@@ -50,10 +51,18 @@ async def on_message(message):
     gif= await func.search_gifs(text.split()[1:])
     await message.channel.send(gif)
 
+  if text.startswith('!messiah'):
+    with open('messiah.png', 'rb') as f:
+      img=discord.File(f)
+      await message.channel.send(file=img)
+
   if text.startswith('!'):
     text=list(text)[1:]
     text=''.join(text)
     if text.isnumeric() == True:
       await func.setx(text, message)
+      
+  if message.author=='<@&833999966669766676>':
+    message.channel.send('Hail Davo!')
 
 client.run(TOKEN)
