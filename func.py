@@ -4,13 +4,18 @@ import os
 import giphy_client
 from giphy_client.rest import ApiException
 import random
-
+import asyncio
+intents = discord.Intents(messages=True, guilds=True, members=True)
+prayer=False
+client=discord.Client(intents=intents)
 participants=[]
 players =[]
 battleon=False
 partcount=False
 x=10
 giphy_token = os.environ['giphykey']
+
+
 
 api_instance = giphy_client.DefaultApi()
 #<editor-fold desc="Description">
@@ -68,6 +73,39 @@ async def setx(text, message):
     await message.channel.send("Participant number already set.")
   else:
     await message.channel.send('No battle in progress.')
+#500558569704521728
+async def pray(message):
+  global prayer
+  if prayer == False:
+    prayer=True
+    counter=0
+    text=message.content.split()[1:]
+    will=await message.guild.fetch_member(391376093527015434)
+    msg=await will.send(str(message.author)+" has prayed to you:\n"+"'"+' '.join(text)+"'")
+    await msg.add_reaction('👍')
+    await msg.add_reaction('👎')
+    
+    msg = await msg.channel.fetch_message(msg.id)
+    
+    while (counter<86400) and (msg.reactions[0].count==1) and (msg.reactions[1].count==1):
+      counter+=1
+      await asyncio.sleep(1)
+      msg = await msg.channel.fetch_message(msg.id)
+
+    msg = await msg.channel.fetch_message(msg.id)
+    num1=msg.reactions[0].count
+    num2=msg.reactions[1].count
+
+    if num1>num2:
+      await message.channel.send('Prayer Granted!\nYou prayed that: '+' '.join(text))
+    elif num2>num1:
+      await message.channel.send('Prayer Denied!\nYou prayed that: '+' '.join(text))
+    else:
+      await message.channel.send('Ignored')
+    
+    prayer=False
+  elif prayer == True:
+    await message.channel.send("Wait your turn! There's already a prayer being prayed!")
 
 def battlestart(message):
   global battleon
@@ -84,6 +122,7 @@ def battlestart(message):
     return msg
 
 async def participantlist(message):
+
   for participant in participants:
     await message.channel.send(participant.mention)
 
@@ -95,8 +134,6 @@ async def initialise():
       db[str(participant)+' Speed']='10'
       db[str(participant)+' Hp']='10'
     await participant.send(f"These are your stats:\nStrength: {db[str(participant)+' Strength']}\nSpeed: {db[str(participant)+' Speed']}\nHp: {db[str(participant)+ ' Hp']}")
-
-    #vars()[participant.nick] = 
 
 async def yes(message):
   global battleon

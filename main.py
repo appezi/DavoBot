@@ -2,10 +2,20 @@ import os
 import discord
 import func
 from replit import db
+import random
 
 client = discord.Client()
 TOKEN = os.environ['TOKEN']
 
+intents = discord.Intents(messages=True, guilds=True)
+intents.typing = False
+intents.presences = False
+
+
+quotes=[]
+with open('quotes.txt', 'r') as f:
+  for line in f:
+    quotes.append(line.strip())
 
 @client.event
 async def on_ready():
@@ -16,12 +26,12 @@ async def on_message(message):
 
   text=message.content
 
-  # if message.author = ''
   if text.startswith('!hi'):
     await func.hi(message)
 
   if text.startswith('!kill'):
     await func.kill(message)
+    print(text.split()[1])
 
   if text.startswith('!battle'):
     await func.battlestart(message)
@@ -34,7 +44,10 @@ async def on_message(message):
 
   if (text.startswith('!theGrace')) or (text.startswith('!grace')):
     await func.theGrace(message)
-  
+
+  if (text.startswith('!test')):
+    print(message.author)
+
   if text.startswith('!chnick'):
     text=text.split()
     text=text[2:]
@@ -55,6 +68,13 @@ async def on_message(message):
     with open('messiah.png', 'rb') as f:
       img=discord.File(f)
       await message.channel.send(file=img)
+    await message.channel.send("'"+' '.join(list(random.choices(quotes)))+"'")
+
+  if text.startswith('!pray'):
+    await func.pray(message)
+
+  if text.startswith('!list'):
+    listMem(message)
 
   if text.startswith('!'):
     text=list(text)[1:]
@@ -62,7 +82,12 @@ async def on_message(message):
     if text.isnumeric() == True:
       await func.setx(text, message)
       
-  if message.author=='<@&833999966669766676>':
-    message.channel.send('Hail Davo!')
+#message.guild.get_member("Williloooooooooooooooooooooooooo#9895")
+
+def listMem(message):
+  print("list")
+  x = message.guild.members
+  for member in x:
+    print(member)
 
 client.run(TOKEN)
