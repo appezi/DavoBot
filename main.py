@@ -3,16 +3,24 @@ import discord
 import func
 from replit import db
 import random
+import asyncio
 
-client = discord.Client()
 TOKEN = os.environ['TOKEN']
 
-intents = discord.Intents(messages=True, guilds=True)
+intents = discord.Intents(messages=True, guilds=True, members=True)
 intents.typing = False
 intents.presences = False
+intents.members = True
 
+prayer=False
+sender=None
+prayed=None
+goddem=False
 
 quotes=[]
+
+client = discord.Client(intents=intents)
+
 with open('quotes.txt', 'r') as f:
   for line in f:
     quotes.append(line.strip())
@@ -23,6 +31,10 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+  global prayer
+  global sender
+  global prayed
+  global goddem
 
   text=message.content
 
@@ -71,7 +83,45 @@ async def on_message(message):
     await message.channel.send("'"+' '.join(list(random.choices(quotes)))+"'")
 
   if text.startswith('!pray'):
-    await func.pray(message)
+    if prayer == True:
+      await message.channel.send('There is already a prayer!')
+    else:
+      await message.channel.send('Please type your prayer!')
+      sender=message.author
+      prayer=True
+      while goddem==False:
+        await asyncio.sleep(0.5)
+      await func.pray(message, prayed)
+      prayer=False
+      sender=None
+      prayed=None
+      goddem=False
+
+  if text.lower().startswith('!iq'):
+    await message.channel.send('Testing your IQ')
+    await asyncio.sleep(1)
+    await message.channel.send('.')
+    await asyncio.sleep(1)
+    await message.channel.send('.')
+    await asyncio.sleep(1)
+    await message.channel.send('.')
+    await asyncio.sleep(1)
+    await message.channel.send('.')
+    await asyncio.sleep(1)
+    await message.channel.send('.')
+    await asyncio.sleep(1)
+    await message.channel.send('.')
+    await asyncio.sleep(5)
+    will =await message.guild.fetch_member(391376093527015434)
+    dav = await message.guild.fetch_member(606748122378403844) 
+    if message.author==will:
+      await message.channel.send("Results are in!\nOMG ur IQ is higher than Davo's...")
+      await asyncio.sleep(2)
+      await message.channel.send("You're still a flop tho...")
+    elif message.author==dav:
+      await message.channel.send("You're IQ is equal to Davo's... Wait a second...")
+    else:
+      await message.channel.send("Results are in!\nYour IQ is less than Davo's ya flop")
 
   if text.startswith('!list'):
     listMem(message)
@@ -81,8 +131,15 @@ async def on_message(message):
     text=''.join(text)
     if text.isnumeric() == True:
       await func.setx(text, message)
-      
-#message.guild.get_member("Williloooooooooooooooooooooooooo#9895")
+  
+  if (prayer == True) and (message.author==sender):
+    prayed=message.content
+    goddem=True
+
+@client.event
+async def on_member_update(before, after):
+  if before.nick=='HamiltonFanGirl':
+    await after.edit(nick='HamiltonFanGirl')
 
 def listMem(message):
   print("list")

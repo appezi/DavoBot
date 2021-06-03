@@ -5,7 +5,9 @@ import giphy_client
 from giphy_client.rest import ApiException
 import random
 import asyncio
+
 intents = discord.Intents(messages=True, guilds=True, members=True)
+
 prayer=False
 client=discord.Client(intents=intents)
 participants=[]
@@ -15,7 +17,10 @@ partcount=False
 x=10
 giphy_token = os.environ['giphykey']
 
-
+#Wills id: 391376093527015434
+#Andrews id: 482102237330538497
+#Jehiels id: 500558569704521728
+#Davids id: 606748122378403844
 
 api_instance = giphy_client.DefaultApi()
 #<editor-fold desc="Description">
@@ -41,7 +46,7 @@ def kill(message):
   msg= message.channel.send(f'You have killed {text[1]}. He is a flop.')
   return msg
   
-async def chnick(message,person, newnick):
+async def chnick(message, person, newnick):
   await person.edit(nick=newnick)
   await message.channel.send(str(message.mentions[0])+' Changed Into '+newnick)
 
@@ -74,38 +79,30 @@ async def setx(text, message):
   else:
     await message.channel.send('No battle in progress.')
 #500558569704521728
-async def pray(message):
-  global prayer
-  if prayer == False:
-    prayer=True
-    counter=0
-    text=message.content.split()[1:]
-    will=await message.guild.fetch_member(391376093527015434)
-    msg=await will.send(str(message.author)+" has prayed to you:\n"+"'"+' '.join(text)+"'")
-    await msg.add_reaction('👍')
-    await msg.add_reaction('👎')
-    
+async def pray(message, prayer):
+  counter=0
+  will=await message.guild.fetch_member(606748122378403844)
+  msg=await will.send(str(message.author)+f" has prayed to you:\n'{prayer}'")
+  await msg.add_reaction('👍')
+  await msg.add_reaction('👎')
+  
+  msg = await msg.channel.fetch_message(msg.id)
+  
+  while (counter<86400) and (msg.reactions[0].count==1) and (msg.reactions[1].count==1):
+    counter+=1
+    await asyncio.sleep(1)
     msg = await msg.channel.fetch_message(msg.id)
-    
-    while (counter<86400) and (msg.reactions[0].count==1) and (msg.reactions[1].count==1):
-      counter+=1
-      await asyncio.sleep(1)
-      msg = await msg.channel.fetch_message(msg.id)
 
-    msg = await msg.channel.fetch_message(msg.id)
-    num1=msg.reactions[0].count
-    num2=msg.reactions[1].count
+  msg = await msg.channel.fetch_message(msg.id)
+  num1=msg.reactions[0].count
+  num2=msg.reactions[1].count
 
-    if num1>num2:
-      await message.channel.send('Prayer Granted!\nYou prayed that: '+' '.join(text))
-    elif num2>num1:
-      await message.channel.send('Prayer Denied!\nYou prayed that: '+' '.join(text))
-    else:
-      await message.channel.send('Ignored')
-    
-    prayer=False
-  elif prayer == True:
-    await message.channel.send("Wait your turn! There's already a prayer being prayed!")
+  if num1>num2:
+    await message.channel.send(f"Prayer Granted!\nYou prayed that: '{prayer}'")
+  elif num2>num1:
+    await message.channel.send(f"Prayer Denied!\nYou prayed that: '{prayer}'")
+  else:
+    await message.channel.send(f"Prayer Ignored.\nYou prayed that: '{prayer}'")
 
 def battlestart(message):
   global battleon
