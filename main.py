@@ -4,6 +4,8 @@ import func
 from replit import db
 import random
 import asyncio
+import discord.utils
+from discord.utils import get
 
 TOKEN = os.environ['TOKEN']
 
@@ -72,9 +74,9 @@ async def on_message(message):
   if text.startswith('!Genesis') or text.startswith('!genesis'):
     await func.genesis(message)
 
-  if text.startswith('!search'):
-    gif= await func.search_gifs(text.split()[1:])
-    await message.channel.send(gif)
+  # if text.startswith('!search'):
+  #   gif= await func.search_gifs(text.split()[1:])
+  #   await message.channel.send(gif)
 
   if text.startswith('!messiah'):
     with open('messiah.png', 'rb') as f:
@@ -115,13 +117,17 @@ async def on_message(message):
     will =await message.guild.fetch_member(391376093527015434)
     dav = await message.guild.fetch_member(606748122378403844) 
     if message.author==will:
-      await message.channel.send("Results are in!\nOMG ur IQ is higher than Davo's...")
+      await message.channel.send("Results are in!\nOMG ur IQ is still lower than Davo's and you thought you can trick the great DAVO bot SHAME on you...")
       await asyncio.sleep(2)
-      await message.channel.send("You're still a flop tho...")
+      await message.channel.send("You're still a big big flop tho...")
     elif message.author==dav:
       await message.channel.send("You're IQ is equal to Davo's... Wait a second...")
     else:
       await message.channel.send("Results are in!\nYour IQ is less than Davo's ya flop")
+
+  if text.startswith('!roast'):
+    user=message.mentions[0]
+    await func.roast(message, user)
 
   if text.startswith('!list'):
     listMem(message)

@@ -1,8 +1,8 @@
 import discord
 from replit import db
 import os
-import giphy_client
-from giphy_client.rest import ApiException
+# import giphy_client
+# from giphy_client.rest import ApiException
 import random
 import asyncio
 
@@ -15,26 +15,25 @@ players =[]
 battleon=False
 partcount=False
 x=10
-giphy_token = os.environ['giphykey']
+# giphy_token = os.environ['giphykey']
 
 #Wills id: 391376093527015434
 #Andrews id: 482102237330538497
-#Jehiels id: 500558569704521728
+#Tims id: 500558569704521728
 #Davids id: 606748122378403844
 
-api_instance = giphy_client.DefaultApi()
+# api_instance = giphy_client.DefaultApi()
 #<editor-fold desc="Description">
-async def search_gifs(query):
-    try:
-        response = api_instance.gifs_search_get(giphy_token, 
-            query, limit=50)
-        lst = list(response.data)
-        gif = random.choices(lst)
+# async def search_gifs(query):
+#     try:
+#         response = api_instance.gifs_search_get(giphy_token, query, limit=50)
+#         lst = list(response.data)
+#         gif = random.choices(lst)
 
-        return gif[0].url
+#         return gif[0].url
 
-    except ApiException as e:
-        return "Exception when calling DefaultApi->gifs_search_get: %s\n" % e
+#     except ApiException as e:
+#         return "Exception when calling DefaultApi->gifs_search_get: %s\n" % e
 
 def hi(message):
   msg=message.channel.send('Hello {0.author.mention}!'.format(message))
@@ -103,6 +102,28 @@ async def pray(message, prayer):
     await message.channel.send(f"Prayer Denied!\nYou prayed that: '{prayer}'")
   else:
     await message.channel.send(f"Prayer Ignored.\nYou prayed that: '{prayer}'")
+
+async def roast(message, user):
+  roasts=[]
+  with open('roasts.txt', 'r') as f:
+    for roast in f:
+      roasts.append(roast)
+  lol=random.choice(roasts)
+  msg=await message.channel.send(str(user.mention)+' '+lol)
+  await msg.add_reaction('👎')
+  msg = await msg.channel.fetch_message(msg.id)
+  counter=0
+  while (counter<100) and (msg.reactions[0].count==1):
+    counter+=1
+    await asyncio.sleep(1)
+    msg = await msg.channel.fetch_message(msg.id)
+  if msg.reactions[0].count>=1:
+    roasts.remove(lol)
+    n=0
+    with open('roasts.txt', 'w') as f:
+      for line in roasts:
+        f.write(line)
+    await message.channel.send('Quote has been deleted! Ya Flop!')
 
 def battlestart(message):
   global battleon
