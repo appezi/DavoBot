@@ -42,6 +42,7 @@ async def on_message(message):
 
   if text.startswith('!hi'):
     await func.hi(message)
+  
 
   if text.startswith('!kill'):
     await func.kill(message)
@@ -74,9 +75,9 @@ async def on_message(message):
   if text.startswith('!Genesis') or text.startswith('!genesis'):
     await func.genesis(message)
 
-  # if text.startswith('!search'):
-  #   gif= await func.search_gifs(text.split()[1:])
-  #   await message.channel.send(gif)
+  if text.startswith('!search'):
+    gif= await func.search_gifs(text.split()[1:])
+    await message.channel.send(gif)
 
   if text.startswith('!messiah'):
     with open('messiah.png', 'rb') as f:
