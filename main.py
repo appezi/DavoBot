@@ -38,12 +38,28 @@ async def on_message(message):
   global prayed
   global goddem
 
+  davoLimit = False
   text=message.content
+  text = text.lower()
+
+  davo = await message.guild.fetch_member(606748122378403844)
+  if message.author == davo:
+    number = random.randint(20)
+    if number == 5:
+      await message.channel.send("All Hail Davo")
+    if number == 3:
+      await message.channel.send("What is life without our gracious lord Davo")     
+
+    if number == 13:
+      await message.channel.send("Davo bot likes Davo...yum")   
+    if number == 12:
+      await message.channel.send("SHUT UP JEHIEL!")   
+    
+
 
   if text.startswith('!hi'):
     await func.hi(message)
   
-
   if text.startswith('!kill'):
     await func.kill(message)
     print(text.split()[1])
@@ -59,9 +75,6 @@ async def on_message(message):
 
   if (text.startswith('!theGrace')) or (text.startswith('!grace')):
     await func.theGrace(message)
-
-  if (text.startswith('!test')):
-    print(message.author)
 
   if text.startswith('!chnick'):
     text=text.split()
@@ -102,19 +115,11 @@ async def on_message(message):
 
   if text.lower().startswith('!iq'):
     await message.channel.send('Testing your IQ')
-    await asyncio.sleep(1)
-    await message.channel.send('.')
-    await asyncio.sleep(1)
-    await message.channel.send('.')
-    await asyncio.sleep(1)
-    await message.channel.send('.')
-    await asyncio.sleep(1)
-    await message.channel.send('.')
-    await asyncio.sleep(1)
-    await message.channel.send('.')
-    await asyncio.sleep(1)
-    await message.channel.send('.')
-    await asyncio.sleep(5)
+    counter=0
+    while counter<6:
+      await asyncio.sleep(1)
+      await message.channel.send('.')
+      counter+=1
     will =await message.guild.fetch_member(391376093527015434)
     dav = await message.guild.fetch_member(606748122378403844) 
     if message.author==will:
@@ -130,9 +135,13 @@ async def on_message(message):
     user=message.mentions[0]
     await func.roast(message, user)
 
-  if text.startswith('!list'):
-    listMem(message)
+  if text.startswith('!balance'):
+    await func.balance(message)
 
+  if text.startswith('!work'):
+    await func.work(message)
+
+  ##No Other Functions Under This ONE!!!
   if text.startswith('!'):
     text=list(text)[1:]
     text=''.join(text)
@@ -143,15 +152,12 @@ async def on_message(message):
     prayed=message.content
     goddem=True
 
+  if text.startswith('!'):
+    await message.channel.send("That isn't a command ya flop!")
+
 @client.event
 async def on_member_update(before, after):
   if before.nick=='HamiltonFanGirl':
     await after.edit(nick='HamiltonFanGirl')
-
-def listMem(message):
-  print("list")
-  x = message.guild.members
-  for member in x:
-    print(member)
 
 client.run(TOKEN)

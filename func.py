@@ -19,8 +19,8 @@ giphy_token = os.environ['giphykey']
 
 #Wills id: 391376093527015434
 #Andrews id: 482102237330538497
-#Tims id: 500558569704521728
-#Davids id: 606748122378403844
+#Tims id: 606748122378403844
+#Davids id:500558569704521728
 
 api_instance = giphy_client.DefaultApi()
 #<editor-fold desc="Description">
@@ -50,6 +50,7 @@ async def chnick(message, person, newnick):
 
 def theGrace(message):
   return message.channel.send(f'May the intelligence of our lord Davo Wang, his weird Reddit facts, and the fellowship of his Sketchup skills be with us all, ever more, Amen.')
+  # return message.channel.send(f'May the intelligence of our lord Davo Wang, his weird Reddit facts, and the fellowship of his Sketchup skills be with us all, ever more, Amen.')
 
 async def theDavoceneCreed(message):
     await message.channel.send('\n We believe in one Davo the Messiah, the peculiar child, the bear and dolphin lover, the true ego inspector, the solver of all that has been solved and unsolved.') 
@@ -79,7 +80,7 @@ async def setx(text, message):
 #500558569704521728
 async def pray(message, prayer):
   counter=0
-  will=await message.guild.fetch_member(606748122378403844)
+  will=await message.guild.fetch_member(500558569704521728)
   msg=await will.send(str(message.author)+f" has prayed to you:\n'{prayer}'")
   await msg.add_reaction('👍')
   await msg.add_reaction('👎')
@@ -147,12 +148,11 @@ async def participantlist(message):
 
 async def initialise():
   for participant in participants:
-    matches=db.prefix(participant)
-    if len(matches)==0:
-      db[str(participant)+' Strength']='10'
-      db[str(participant)+' Speed']='10'
-      db[str(participant)+' Hp']='10'
-    await participant.send(f"These are your stats:\nStrength: {db[str(participant)+' Strength']}\nSpeed: {db[str(participant)+' Speed']}\nHp: {db[str(participant)+ ' Hp']}")
+    if participant not in db.keys():
+      db[str(participant)+'stats']={'strength':10, 'speed':10, 'hp':10}
+    await participant.send(f"These are your stats:")
+    for stat in db[str(participant)+'stats']:
+      await participant.send(f"{stat.capitalize()}: {db[str(participant)+'stats'][stat]}")
 
 async def yes(message):
   global battleon
@@ -179,4 +179,17 @@ def endbattle(message):
   else:
     return message.channel.send("There's no battle on y'a flop!")
 
-  #</editor-fold>
+async def balance(message):
+  user=message.author
+  if (str(user)+'balance') not in db.keys():
+    db[str(user)+'balance']=0
+  await message.channel.send(f"You have {db[str(user)+'balance']} ego points.")
+
+async def work(message):
+  user = message.author
+  if (str(user)+'balance') not in db.keys():
+    db[str(user)+'balance']=0
+  gain=random.randrange(-5, 10, 1)
+  db[str(user)+'balance']+=gain
+  await message.channel.send(f"You have gained {gain} ego points!")
+  await balance(message)
