@@ -1,6 +1,6 @@
 import os
 import discord
-import func
+import newFunc
 import discord.utils
 
 TOKEN = os.environ['TOKEN']
@@ -19,7 +19,7 @@ quotes=[]
 
 client = discord.Client(intents=intents)
 
-with open('quotes.txt', 'r') as f:
+with open('Data/quotes.txt', 'r') as f:
   for line in f:
     quotes.append(line.strip())
 
@@ -39,45 +39,45 @@ async def on_message(message):
   text = text.lower()  
 
   if text.startswith('!battle'):
-    await func.battlestart(message)
+    await newFunc.battlestart(message)
 
   if text.startswith('!vote'):
-    await func.vote(message)
+    await newFunc.vote(message)
 
   if text.startswith('!shares'):
-    await func.shares(message)
+    await newFunc.shares(message)
 
   if text.startswith('!trade'):
-    await func.trade(message)
+    await newFunc.trade(message)
 
   if text.startswith('!yes'):
-    await func.yes(message)
+    await newFunc.yes(message)
 
   if text.startswith('!endbattle'):
-    await func.endbattle(message)
+    await newFunc.endbattle(message)
 
   if text.startswith('!chnick'):
     text=text.split()
     text=text[2:]
     text=' '.join(text)
-    await func.chnick(message, message.mentions[0], text)
+    await newFunc.chnick(message, message.mentions[0], text)
 
   if text.startswith('!search'):
-    gif= await func.search_gifs(text.split()[1:])
+    gif= await newFunc.search_gifs(text.split()[1:])
     await message.channel.send(gif)
 
   if text.startswith('!balance') or text.startswith('!bal'):
-    await func.balance(message)
+    await newFunc.balance(message)
 
   if text.startswith('!work'):
-    await func.work(message)
+    await newFunc.work(message)
 
-  ##No Other Functions Under This ONE!!!
+  ##No Other newFunctions Under This ONE!!!
   if text.startswith('!'):
     text=list(text)[1:]
     text=''.join(text)
     if text.isnumeric() == True:
-      await func.setx(text, message)
+      await newFunc.setx(text, message)
 
   if text.startswith('!'):
     await message.channel.send("Error!")

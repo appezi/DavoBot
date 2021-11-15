@@ -1,8 +1,6 @@
 import discord
 from replit import db
 import os
-import giphy_client
-from giphy_client.rest import ApiException
 import random
 import asyncio
 import csv
@@ -21,7 +19,7 @@ placeHolderID =1
 
 ##Bennet Corporation Exclusive
 def shares(message):
-  with open('shares.csv', 'r') as f:
+  with open('Data/shares.csv', 'r') as f:
     data=csv.DictReader(f)
     finalMess=''
     for row in data:
@@ -73,7 +71,7 @@ async def vote(message):
   for user in num2users:
     await message.channel.send(f'<@{user}>')
   
-  with open("shares.csv", 'r') as f:
+  with open("Data/shares.csv", 'r') as f:
     reader=csv.DictReader(f)
     num1Total=0
     num2Total=0
